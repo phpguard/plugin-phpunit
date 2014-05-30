@@ -1,0 +1,19 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="true"
+         strict="true"
+         bootstrap="functional/bootstrap.php">
+
+    <testsuites>
+        <testsuite name="PhpSpec Plugin Functional Test">
+            <directory>./functional</directory>
+            <exclude>./functional/fixtures</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>

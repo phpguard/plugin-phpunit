@@ -2,7 +2,6 @@
     "name": "phpguard/plugin-phpunit",
     "description": "PHPUnit Plugin for PhpGuard",
     "license": "MIT",
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "authors": [
         {
@@ -15,7 +14,8 @@
         "phpguard/phpguard":        "dev-plugin-separation"
     },
     "require-dev": {
-        "phpguard/plugin-phpspec":  "dev-master"
+        "phpguard/plugin-phpspec":  "dev-master",
+        "phpspec/phpspec": "2.1.*@dev"
     },
     "autoload": {
         "psr-4": {
