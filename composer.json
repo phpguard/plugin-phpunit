@@ -1,0 +1,25 @@
+{
+    "name": "phpguard/plugin-phpunit",
+    "description": "PHPUnit Plugin for PhpGuard",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Anthonius Munthi",
+            "email": "me@itstoni.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit":          "~4.0",
+        "phpguard/phpguard":        "dev-plugin-separation"
+    },
+    "require-dev": {
+        "phpguard/plugin-phpspec":  "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpGuard\\Plugins\\PHPUnit\\": "src/"
+        }
+    }
+}

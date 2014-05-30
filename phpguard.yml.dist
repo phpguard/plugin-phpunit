@@ -1,0 +1,34 @@
+phpguard:
+    coverage:
+        whitelist:
+            - src
+        blacklist:
+            - spec
+            - functional
+            - vendor
+        show_uncovered_files:   true
+        show_only_summary:      true
+        output.html:            build/coverage
+        output.text:            true
+        output.clover:          build/logs/clover.xml
+
+phpunit:
+    options:
+        all_on_start:   true
+        all_after_pass: true
+        keep_failed:    true
+    watch:
+        - { pattern: "#^src\/(.+)\.php$#", transform: "functional/PHPUnitPluginTest.php" }
+        - { pattern: "#^functional\/.*Test.php$#" }
+
+phpspec:
+    options:
+        cli: "--format=pretty"
+        all_on_start:       true
+        all_after_pass:     true
+        keep_failed:        true
+        import_suites:      false
+        run_all: "--format=pretty"
+    watch:
+        - { pattern: "#^src\/(.+)\.php$#", transform: "spec/PhpGuard/Plugins/PHPUnit/${1}Spec.php" }
+        - { pattern: "#^spec\/(.+)\.php$#" }
