@@ -21,7 +21,7 @@ foreach ($files as $file) {
 
 $files = array(
     __DIR__.'/../vendor/autoload.php', // self plugin dir
-    __DIR__.'/../../../vendor/autoload.php', // phpguard dir
+    __DIR__.'/../../../../vendor', // composer installation
 );
 
 foreach($files as $file){

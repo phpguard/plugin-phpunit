@@ -2,7 +2,6 @@
     "name": "phpguard/plugin-phpunit",
     "description": "PHPUnit Plugin for PhpGuard",
     "license": "MIT",
-    "prefer-stable": true,
     "authors": [
         {
             "name": "Anthonius Munthi",
@@ -11,7 +10,7 @@
     ],
     "require": {
         "phpunit/phpunit":          "~4.0",
-        "phpguard/phpguard":        "dev-plugin-separation"
+        "phpguard/phpguard":        "0.1.*@dev"
     },
     "require-dev": {
         "phpguard/plugin-phpspec":  "dev-master",
