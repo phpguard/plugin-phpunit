@@ -30,6 +30,4 @@ class Command extends \PHPUnit_TextUI_Command
         $this->longOptions['phpguard-test-files'] = null;
         return parent::run($argv, $exit);
     }
-
-
 }
