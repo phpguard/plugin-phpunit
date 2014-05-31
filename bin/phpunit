@@ -41,4 +41,3 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 
 use PhpGuard\Plugins\PHPUnit\Bridge\TextUI\Command as TextUICommand;
 TextUICommand::main();
-
