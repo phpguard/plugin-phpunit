@@ -11,6 +11,7 @@
 
 namespace PhpGuard\Plugins\PHPUnit;
 
+use PhpGuard\Application\Container\ContainerInterface;
 use PhpGuard\Application\Event\ResultEvent;
 use PhpGuard\Application\Event\ProcessEvent;
 use PhpGuard\Application\PhpGuard;
@@ -28,6 +29,14 @@ class PHPUnitPlugin extends Plugin
     public function __construct()
     {
         $this->setOptions(array());
+    }
+
+    public function setContainer(ContainerInterface $container)
+    {
+        parent::setContainer($container);
+        $container->setShared('phpunit.inspector',function($c){
+            return new Inspector();
+        });
     }
 
     public function addWatcher(Watcher $watcher)

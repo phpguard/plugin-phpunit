@@ -21,12 +21,12 @@ foreach ($files as $file) {
 
 $files = array(
     __DIR__.'/../vendor/autoload.php', // self plugin dir
-    __DIR__.'/../../../../vendor', // composer installation
+    __DIR__.'/../../../../vendor/autoload.php', // composer installation
 );
 
 foreach($files as $file){
     if(file_exists($file)){
-        include $file;
+        require_once $file;
         break;
     }
 }
