@@ -157,18 +157,15 @@ class Inspector extends ContainerAware
         $results = array();
         foreach ($data as $key=>$event) {
             $file = $event->getArgument('file');
+            $failedKey = md5(realpath($file));
             if ($event->isSucceed()) {
-                foreach ($this->failed as $failedKey=>$failedEvent) {
-                    if ($failedEvent->getArgument('file') === $file) {
-                        unset($this->failed[$failedKey]);
-                    }
-                }
+                unset($this->failed[$failedKey]);
                 if ($showSuccess) {
-                    $results[$key] = $event;
+                    $results[] = $event;
                 }
             } else {
-                $this->failed[$key] = $event;
-                $results[$key] = $event;
+                $this->failed[$failedKey] = $event;
+                $results[] = $event;
             }
         }
 

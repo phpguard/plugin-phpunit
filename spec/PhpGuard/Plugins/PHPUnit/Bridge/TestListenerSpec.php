@@ -65,7 +65,7 @@ class TestListenerSpec extends ObjectBehavior
         $e = new \Exception('Some Error');
         $this->addError($test,$e,0);
         $result = $this->getResults();
-        $result = $result[$this->resultKey];
+        $result = $result[0];
         $result->shouldBeBroken();
     }
 
@@ -76,7 +76,7 @@ class TestListenerSpec extends ObjectBehavior
     {
         $this->addFailure($test,$assertionFailedError,0);
         $result = $this->getResults();
-        $result = $result[$this->resultKey];
+        $result = $result[0];
         $result->shouldBeFailed();
     }
 
@@ -87,7 +87,7 @@ class TestListenerSpec extends ObjectBehavior
     {
         $this->addIncompleteTest($test,$assertionFailedError,0);
         $result = $this->getResults();
-        $result = $result[$this->resultKey];
+        $result = $result[0];
         $result->shouldBeFailed();
     }
 
@@ -99,7 +99,7 @@ class TestListenerSpec extends ObjectBehavior
         $this->addRiskyTest($test,$e,0);
         $this->shouldBeFailed();
         $result = $this->getResults();
-        $result = $result[$this->resultKey];
+        $result = $result[0];
         $result->shouldBeFailed();
     }
 
@@ -110,7 +110,7 @@ class TestListenerSpec extends ObjectBehavior
         $e = new \Exception('Some Risky');
         $this->addSkippedTest($test,$e,0);
         $result = $this->getResults();
-        $result = $result[$this->resultKey];
+        $result = $result[0];
         $this->shouldNotBeFailed();
         $result->shouldBeSucceed();
     }
@@ -130,13 +130,12 @@ class TestListenerSpec extends ObjectBehavior
         $this->getResults()->shouldHaveCount(0);
 
         $suite->getName()->willReturn(__CLASS__);
-        $key = md5(__CLASS__);
 
         $this->shouldNotBeFailed();
 
         $this->endTestSuite($suite);
         $result = $this->getResults();
-        $result = $result[$key];
+        $result = $result[0];
         $result->shouldBeSucceed();
     }
 

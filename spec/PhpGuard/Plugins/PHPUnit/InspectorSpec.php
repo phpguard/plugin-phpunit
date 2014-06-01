@@ -123,8 +123,7 @@ class InspectorSpec extends ObjectBehavior
     }
 
     function its_runAll_should_returns_only_failed_or_broken_tests(
-        Runner $runner,
-        Process $process
+        Runner $runner
     )
     {
         Filesystem::serialize($this->cacheFile,array(
@@ -136,14 +135,11 @@ class InspectorSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $results = $this->runAll();
-        $results->getResults()->shouldHaveKey('failed');
-        $results->getResults()->shouldHaveKey('broken');
-        $results->getResults()->shouldNotHaveKey('succeed');
+        $results->getResults()->shouldHaveCount(2);
     }
 
     function it_should_keep_failed_test_to_run(
-        Runner $runner,
-        ContainerInterface $container
+        Runner $runner
     )
     {
         $failed = ResultEvent::createFailed('Failed',array(
@@ -156,8 +152,7 @@ class InspectorSpec extends ObjectBehavior
             'success' => $success
         ));
 
-        $this->runAll()->getResults()->shouldHaveKey('failed');
-        $this->runAll()->getResults()->shouldNotHaveKey('success');
+        $this->runAll()->getResults()->shouldHaveCount(1);
 
         $runner->run(Argument::that(function(ProcessBuilder $builder){
             $line = $builder->getProcess()->getCommandLine();

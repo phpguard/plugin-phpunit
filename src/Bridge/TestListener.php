@@ -123,7 +123,7 @@ class TestListener implements \PHPUnit_Framework_TestListener
                 )
             );
 
-            $this->results[md5($name)] = $event;
+            $this->results[] = $event;
         }
     }
 
@@ -151,12 +151,11 @@ class TestListener implements \PHPUnit_Framework_TestListener
             '%test_name%' => $class.'::'.$name
         ));
         $r = new \ReflectionClass($class);
-        $key = md5($r->getFileName().$test->getName(true));
         $arguments = array(
             'file' => realpath($r->getFileName()),
         );
         $event = new ResultEvent($result,$message,$arguments,$exception);
-        $this->results[$key] = $event;
+        $this->results[] = $event;
     }
 
     /**
