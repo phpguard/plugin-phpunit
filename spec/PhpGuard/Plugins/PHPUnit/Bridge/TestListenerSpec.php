@@ -2,7 +2,7 @@
 
 namespace spec\PhpGuard\Plugins\PHPUnit\Bridge;
 
-use PhpGuard\Application\Bridge\CodeCoverageRunner;
+use PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession;
 use PhpGuard\Application\Container;
 use PhpGuard\Application\Spec\ObjectBehavior;
 use Prophecy\Argument;
@@ -25,7 +25,7 @@ class TestListenerSpec extends ObjectBehavior
 {
     protected $resultKey;
 
-    function let(CodeCoverageRunner $coverageRunner, MockTestCase $test)
+    function let(CodeCoverageSession $coverageRunner, MockTestCase $test)
     {
         $test->getName(Argument::any())
             ->willReturn('test_name');
@@ -39,7 +39,7 @@ class TestListenerSpec extends ObjectBehavior
     }
 
     function it_should_start_coverage_test_started(
-        CodeCoverageRunner $coverageRunner,
+        CodeCoverageSession $coverageRunner,
         MockTestCase $test
     )
     {
@@ -49,7 +49,7 @@ class TestListenerSpec extends ObjectBehavior
     }
 
     function it_should_stop_coverage_when_test_ended(
-        CodeCoverageRunner $coverageRunner,
+        \PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession $coverageRunner,
         MockTestCase $test
     )
     {

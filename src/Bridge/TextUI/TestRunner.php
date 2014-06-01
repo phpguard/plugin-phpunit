@@ -11,7 +11,7 @@
 
 namespace PhpGuard\Plugins\PHPUnit\Bridge\TextUI;
 
-use PhpGuard\Application\Bridge\CodeCoverageRunner;
+use PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession;
 use PhpGuard\Application\Event\ResultEvent;
 use PhpGuard\Application\PhpGuard;
 use PhpGuard\Plugins\PHPUnit\Inspector;
@@ -36,7 +36,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
     private $testListener;
 
     /**
-     * @var CodeCoverageRunner
+     * @var \PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession
      */
     private $coverageRunner;
 
@@ -44,7 +44,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
 
     public function __construct(PHPUnit_Runner_TestSuiteLoader $loader = null, PHP_CodeCoverage_Filter $filter = null)
     {
-        $this->coverageRunner = $coverageRunner = CodeCoverageRunner::getCached();
+        $this->coverageRunner = $coverageRunner = CodeCoverageSession::getCached();
         $filter = $coverageRunner->getFilter();
 
         parent::__construct($loader, $filter);

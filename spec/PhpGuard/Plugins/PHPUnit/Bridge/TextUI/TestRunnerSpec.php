@@ -2,7 +2,7 @@
 
 namespace spec\PhpGuard\Plugins\PHPUnit\Bridge\TextUI;
 
-use PhpGuard\Application\Bridge\CodeCoverageRunner;
+use PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession;
 use PhpGuard\Plugins\PHPUnit\Bridge\TextUI\TestRunner;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;

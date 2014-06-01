@@ -12,7 +12,7 @@
 namespace PhpGuard\Plugins\PHPUnit\Bridge;
 
 use Exception;
-use PhpGuard\Application\Bridge\CodeCoverageRunner;
+use PhpGuard\Application\Bridge\CodeCoverage\CodeCoverageSession;
 use PhpGuard\Application\Event\ResultEvent;
 use PHPUnit_Framework_Test;
 use PHPUnit_Framework_TestSuite;
@@ -32,11 +32,11 @@ class TestListener implements \PHPUnit_Framework_TestListener
     private $hasFailed = false;
 
     /**
-     * @var CodeCoverageRunner
+     * @var CodeCoverageSession
      */
     private $coverage;
 
-    public function setCoverage(CodeCoverageRunner $coverage)
+    public function setCoverage(CodeCoverageSession $coverage)
     {
         $this->coverage = $coverage;
     }
