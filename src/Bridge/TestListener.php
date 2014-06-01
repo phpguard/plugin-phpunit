@@ -25,7 +25,7 @@ use PHPUnit_Framework_AssertionFailedError;
 class TestListener implements \PHPUnit_Framework_TestListener
 {
     /**
-     * @var array
+     * @var ResultEvent[]
      */
     private $results = array();
 
@@ -49,35 +49,30 @@ class TestListener implements \PHPUnit_Framework_TestListener
 
     public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        //printf("Test '%s' failed.\n", $test->getName());
         $message = "Failed: %test_name%";
         $this->addResult($test,ResultEvent::FAILED,$message,$e);
     }
 
     public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-        //printf("Test '%s' is incomplete.\n", $test->getName());
         $message = 'Incomplete: %test_name%';
         $this->addResult($test,ResultEvent::FAILED,$message,$e);
     }
 
     public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-        //printf("Test '%s' is deemed risky.\n", $test->getName());
         $message = "Risky: %test_name%";
         $this->addResult($test,ResultEvent::FAILED,$message,$e);
     }
 
     public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-        //printf("Test '%s' has been skipped.\n", $test->getName());
         $message = "Skipped: %test_name%";
         $this->addResult($test,ResultEvent::SUCCEED,$message,$e);
     }
 
     public function startTest(PHPUnit_Framework_Test $test)
     {
-        //printf("Test '%s' started.\n", $test->getName());
         $name = strtr('%test%::%name%', array(
             '%test%' => get_class($test),
             '%name%' =>$test->getName(),
@@ -89,7 +84,6 @@ class TestListener implements \PHPUnit_Framework_TestListener
 
     public function endTest(PHPUnit_Framework_Test $test, $time)
     {
-        //printf("Test '%s' ended.\n", $test->getName());
         $this->coverage->stop();
 
         return;
@@ -128,10 +122,10 @@ class TestListener implements \PHPUnit_Framework_TestListener
     }
 
     /**
-     * @param \PHPUnit_Framework_TestCase $test
-     * @param int                         $result
-     * @param string                      $message
-     * @param \Exception                  $exception
+     * @param mixed      $test
+     * @param int        $result
+     * @param string     $message
+     * @param \Exception $exception
      *
      * @return void
      */

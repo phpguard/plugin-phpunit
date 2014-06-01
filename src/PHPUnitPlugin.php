@@ -11,8 +11,6 @@
 
 namespace PhpGuard\Plugins\PHPUnit;
 
-use PhpGuard\Application\Container\ContainerInterface;
-use PhpGuard\Application\PhpGuard;
 use PhpGuard\Application\Plugin\Plugin;
 use PhpGuard\Application\Watcher;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -37,7 +35,6 @@ class PHPUnitPlugin extends Plugin
             return new Inspector();
         });
     }
-
 
     public function addWatcher(Watcher $watcher)
     {
