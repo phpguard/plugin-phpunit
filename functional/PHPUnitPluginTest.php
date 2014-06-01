@@ -12,6 +12,7 @@
 namespace PhpGuard\Plugins\PHPUnit\Functional;
 
 use PhpGuard\Application\PhpGuard;
+use PhpGuard\Application\Util\Filesystem;
 use PhpGuard\Plugins\PHPUnit\Inspector;
 
 /**
@@ -57,8 +58,8 @@ class PHPUnitPluginTest extends TestCase
      */
     public function testShouldRunAll($expected)
     {
-        static::cleanDir(static::$tmpDir);
-        static::mkdir(static::$tmpDir);
+        Filesystem::cleanDir(static::$tmpDir);
+        Filesystem::mkdir(static::$tmpDir);
         static::buildFixtures();
         static::createApplication();
 
@@ -77,8 +78,8 @@ class PHPUnitPluginTest extends TestCase
 
     public function testShouldRunAllAfterPass()
     {
-        static::cleanDir(static::$tmpDir);
-        static::mkdir(static::$tmpDir);
+        Filesystem::cleanDir(static::$tmpDir);
+        Filesystem::mkdir(static::$tmpDir);
         static::buildFixtures();
         static::createApplication();
 
