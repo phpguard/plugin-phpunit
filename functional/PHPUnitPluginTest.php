@@ -13,7 +13,6 @@ namespace PhpGuard\Plugins\PHPUnit\Functional;
 
 use PhpGuard\Application\PhpGuard;
 use PhpGuard\Application\Util\Filesystem;
-use PhpGuard\Plugins\PHPUnit\Inspector;
 
 /**
  * Class PHPUnitPluginTest
@@ -129,7 +128,7 @@ class {$className} extends \PHPUnit_Framework_TestCase
 EOC;
         $fileName = static::$tmpDir.DIRECTORY_SEPARATOR.$file;
         file_put_contents($fileName,$content);
+
         return $fileName;
     }
 }
- 

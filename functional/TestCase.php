@@ -9,8 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace PhpGuard\Plugins\PHPUnit\Functional;
-
+namespace PhpGuard\Plugins\PHPUnit\functional;
 
 use PhpGuard\Application\PhpGuard;
 use PhpGuard\Application\Test\FunctionalTestCase;
@@ -31,20 +30,20 @@ class TestCase extends FunctionalTestCase
         static::$container->setParameter('phpunit.inspector_cache',$file);
     }
 
-    static public function setUpBeforeClass()
+    public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
         static::buildFixtures();
         chdir(static::$tmpDir);
     }
 
-    static protected function buildFixtures()
+    protected static function buildFixtures()
     {
         $finder  = Finder::create();
         Filesystem::copyDir(__DIR__.'/fixtures',static::$tmpDir,$finder);
         chdir(static::$tmpDir);
         $exFinder = new ExecutableFinder();
-        if(!is_executable($executable=$exFinder->find('composer.phar'))){
+        if (!is_executable($executable=$exFinder->find('composer.phar'))) {
             $executable = $exFinder->find('composer');
         }
         $process = new Process($executable.' dumpautoload');
@@ -59,4 +58,4 @@ class TestCase extends FunctionalTestCase
     {
         return static::$container->get('phpunit.inspector');
     }
-} 
+}

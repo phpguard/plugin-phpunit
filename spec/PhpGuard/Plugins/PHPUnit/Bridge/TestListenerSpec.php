@@ -64,7 +64,8 @@ class TestListenerSpec extends ObjectBehavior
     {
         $e = new \Exception('Some Error');
         $this->addError($test,$e,0);
-        $result = $this->getResults()[$this->resultKey];
+        $result = $this->getResults();
+        $result = $result[$this->resultKey];
         $result->shouldBeBroken();
     }
 
@@ -74,7 +75,8 @@ class TestListenerSpec extends ObjectBehavior
     )
     {
         $this->addFailure($test,$assertionFailedError,0);
-        $result = $this->getResults()[$this->resultKey];
+        $result = $this->getResults();
+        $result = $result[$this->resultKey];
         $result->shouldBeFailed();
     }
 
@@ -84,7 +86,8 @@ class TestListenerSpec extends ObjectBehavior
     )
     {
         $this->addIncompleteTest($test,$assertionFailedError,0);
-        $result = $this->getResults()[$this->resultKey];
+        $result = $this->getResults();
+        $result = $result[$this->resultKey];
         $result->shouldBeFailed();
     }
 
@@ -95,7 +98,8 @@ class TestListenerSpec extends ObjectBehavior
         $e = new \Exception('Some Risky');
         $this->addRiskyTest($test,$e,0);
         $this->shouldBeFailed();
-        $result = $this->getResults()[$this->resultKey];
+        $result = $this->getResults();
+        $result = $result[$this->resultKey];
         $result->shouldBeFailed();
     }
 
@@ -105,7 +109,8 @@ class TestListenerSpec extends ObjectBehavior
     {
         $e = new \Exception('Some Risky');
         $this->addSkippedTest($test,$e,0);
-        $result = $this->getResults()[$this->resultKey];
+        $result = $this->getResults();
+        $result = $result[$this->resultKey];
         $this->shouldNotBeFailed();
         $result->shouldBeSucceed();
     }
@@ -130,7 +135,8 @@ class TestListenerSpec extends ObjectBehavior
         $this->shouldNotBeFailed();
 
         $this->endTestSuite($suite);
-        $result = $this->getResults()[$key];
+        $result = $this->getResults();
+        $result = $result[$key];
         $result->shouldBeSucceed();
     }
 

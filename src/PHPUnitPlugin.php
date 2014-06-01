@@ -12,12 +12,9 @@
 namespace PhpGuard\Plugins\PHPUnit;
 
 use PhpGuard\Application\Container\ContainerInterface;
-use PhpGuard\Application\Event\ResultEvent;
-use PhpGuard\Application\Event\ProcessEvent;
 use PhpGuard\Application\PhpGuard;
 use PhpGuard\Application\Plugin\Plugin;
 use PhpGuard\Application\Watcher;
-use PhpGuard\Listen\Event\ChangeSetEvent;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -34,7 +31,7 @@ class PHPUnitPlugin extends Plugin
     public function setContainer(ContainerInterface $container)
     {
         parent::setContainer($container);
-        $container->setShared('phpunit.inspector',function($c){
+        $container->setShared('phpunit.inspector',function ($c) {
             return new Inspector();
         });
     }
@@ -42,10 +39,10 @@ class PHPUnitPlugin extends Plugin
     public function addWatcher(Watcher $watcher)
     {
         parent::addWatcher($watcher);
-        if($this->options['always_lint']){
+        if ($this->options['always_lint']) {
             $options = $watcher->getOptions();
             $linters = array_keys($options['lint']);
-            if(!in_array('php',$linters)){
+            if (!in_array('php',$linters)) {
                 $linters[] = 'php';
                 $options['lint'] = $linters;
                 $watcher->setOptions($options);

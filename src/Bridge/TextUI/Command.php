@@ -10,9 +10,6 @@
  */
 
 namespace PhpGuard\Plugins\PHPUnit\Bridge\TextUI;
-use PHPUnit_Framework_Test;
-use PHPUnit_Framework_Exception;
-use PHPUnit_TextUI_TestRunner;
 
 /**
  * Class Command
@@ -28,6 +25,7 @@ class Command extends \PHPUnit_TextUI_Command
     public function run(array $argv, $exit = true)
     {
         $this->longOptions['phpguard-test-files'] = null;
+
         return parent::run($argv, $exit);
     }
 }

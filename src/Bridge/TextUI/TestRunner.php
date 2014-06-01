@@ -12,7 +12,6 @@
 namespace PhpGuard\Plugins\PHPUnit\Bridge\TextUI;
 
 use PhpGuard\Application\Bridge\CodeCoverageRunner;
-use PhpGuard\Application\Container;
 use PhpGuard\Application\Event\ResultEvent;
 use PhpGuard\Application\PhpGuard;
 use PhpGuard\Plugins\PHPUnit\Inspector;
@@ -49,7 +48,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         $filter = $coverageRunner->getFilter();
 
         parent::__construct($loader, $filter);
-        if(is_file($file=Inspector::getResultFileName())){
+        if (is_file($file=Inspector::getResultFileName())) {
             unlink($file);
         }
         $this->testListener = new TestListener();
@@ -64,26 +63,28 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         $results = $this->testListener->getResults();
         Filesystem::serialize(Inspector::getResultFileName(),$results);
         $this->coverageRunner->saveState();
+
         return $result;
     }
 
     public function getTest($suiteClassName, $suiteClassFile = '', $suffixes = '')
     {
         // check if suite has comma separate forms
-        if(false===strpos($suiteClassName,',')){
+        if (false===strpos($suiteClassName,',')) {
             return parent::getTest($suiteClassName, $suiteClassFile, $suffixes);
         }
         $files = explode(',',$suiteClassName);
         $files = array_unique($files);
         $suite = new PHPUnit_Framework_TestSuite('PhpGuard Unit Tests');
         $suite->addTestFiles($files);
+
         return $suite;
     }
 
     private function configureErrorHandler()
     {
         $file = PhpGuard::getPluginCache('phpunit').'/error.log';
-        if(is_file($file)){
+        if (is_file($file)) {
             @unlink($file);
         }
         touch($file);
@@ -102,15 +103,15 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
         $lastError = error_get_last();
 
-        if($lastError && in_array($lastError['type'],$fatalErrors)){
+        if ($lastError && in_array($lastError['type'],$fatalErrors)) {
             $message = 'Fatal Error '.$lastError['message'];
             $error = $lastError;
             $trace = file($this->errorFile);
 
             $traces = array();
-            for( $i=0,$count=count($trace);$i < $count; $i++ ){
+            for ( $i=0,$count=count($trace);$i < $count; $i++ ) {
                 $text = trim($trace[$i]);
-                if(false!==($pos=strpos($text,'PHP '))){
+                if (false!==($pos=strpos($text,'PHP '))) {
                     $text = substr($text,$pos+4);
                 }
                 $traces[] = $text;
@@ -122,7 +123,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
                 $traces
             );
             Filesystem::serialize(Inspector::getResultFileName(),array($event));
-            if($this->coverageRunner){
+            if ($this->coverageRunner) {
                 $this->coverageRunner->saveState();
             }
         }

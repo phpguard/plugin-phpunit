@@ -13,10 +13,7 @@ namespace PhpGuard\Plugins\PHPUnit\Bridge;
 
 use Exception;
 use PhpGuard\Application\Bridge\CodeCoverageRunner;
-use PhpGuard\Application\Container;
 use PhpGuard\Application\Event\ResultEvent;
-use PhpGuard\Application\Plugin\PluginInterface;
-use PhpGuard\Plugins\PHPUnit\PHPUnitPlugin;
 use PHPUnit_Framework_Test;
 use PHPUnit_Framework_TestSuite;
 use PHPUnit_Framework_AssertionFailedError;
@@ -86,6 +83,7 @@ class TestListener implements \PHPUnit_Framework_TestListener
             '%name%' =>$test->getName(),
         ));
         $this->coverage->start($name);
+
         return;
     }
 
@@ -93,27 +91,29 @@ class TestListener implements \PHPUnit_Framework_TestListener
     {
         //printf("Test '%s' ended.\n", $test->getName());
         $this->coverage->stop();
+
         return;
     }
 
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         $this->hasFailed = false;
+
         return;
     }
 
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         $name = $suite->getName();
-        if(false!==strpos($name,'::')){
+        if (false!==strpos($name,'::')) {
             return;
         }
 
-        if(!class_exists($name)){
+        if (!class_exists($name)) {
             return;
         }
 
-        if(!$this->isFailed()){
+        if (!$this->isFailed()) {
             $r = new \ReflectionClass($name);
             $event = new ResultEvent(
                 ResultEvent::SUCCEED,
@@ -123,16 +123,15 @@ class TestListener implements \PHPUnit_Framework_TestListener
                 )
             );
 
-
             $this->results[md5($name)] = $event;
         }
     }
 
     /**
      * @param \PHPUnit_Framework_TestCase $test
-     * @param int        $result
-     * @param string     $message
-     * @param \Exception $exception
+     * @param int                         $result
+     * @param string                      $message
+     * @param \Exception                  $exception
      *
      * @return void
      */
@@ -141,11 +140,11 @@ class TestListener implements \PHPUnit_Framework_TestListener
 
         $class = get_class($test);
         $name = $test->getName(true);
-        if(false!==strpos($class,'PHPUnit_Framework')){
+        if (false!==strpos($class,'PHPUnit_Framework')) {
             return;
         }
 
-        if($result>ResultEvent::SUCCEED){
+        if ($result>ResultEvent::SUCCEED) {
             $this->hasFailed = true;
         }
         $message = strtr($message,array(

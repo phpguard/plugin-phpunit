@@ -48,15 +48,16 @@ class Inspector extends ContainerAware
 
     public function __construct()
     {
-        if(is_file($file = static::getResultFileName())){
+        if (is_file($file = static::getResultFileName())) {
             unlink($file);
         }
         $this->executable = realpath(__DIR__.'/../bin/phpunit');
     }
 
-    static public function getResultFileName()
+    public static function getResultFileName()
     {
         $dir = PhpGuard::getPluginCache('phpunit');
+
         return $dir.'/results.dat';
     }
 
@@ -85,11 +86,12 @@ class Inspector extends ContainerAware
 
         $exitCode =$runner->run($builder)->getExitCode();
         $results = $this->checkResult(true);
-        if(0===$exitCode && $this->options['all_after_pass']){
+        if (0===$exitCode && $this->options['all_after_pass']) {
             $this->getLogger()->addCommon('Run all tests after pass');
             $results = array_merge($results,$this->doRunAll());
         }
         $event = new ProcessEvent($this->plugin,$results);
+
         return $event;
     }
 
@@ -97,9 +99,10 @@ class Inspector extends ContainerAware
     {
         $results = $this->doRunAll();
         $event = new ProcessEvent($this->plugin,$results);
-        if(count($this->failed) > 0){
+        if (count($this->failed) > 0) {
             $this->container->setParameter('application.exit_code',ResultEvent::FAILED);
         }
+
         return $event;
     }
 
@@ -108,14 +111,14 @@ class Inspector extends ContainerAware
         $args = $this->runArgs;
         $args = explode(' ',$args);
 
-        if(count($this->failed) > 0){
+        if (count($this->failed) > 0) {
             $files = array();
-            foreach($this->failed as $resultEvent){
+            foreach ($this->failed as $resultEvent) {
                 $file=$resultEvent->getArgument('file');
                 $file = ltrim(str_replace(getcwd(),'',$file),'\\/');
                 $files[] = $file;
             }
-            if(!empty($files)){
+            if (!empty($files)) {
                 $this->getLogger()->addDebug('keep failed tests run');
                 $files = array_unique($files);
                 $args[] = implode(',',$files);
@@ -128,9 +131,10 @@ class Inspector extends ContainerAware
         $runner->run($builder);
         $results = $this->checkResult(false);
 
-        if(empty($this->failed)){
+        if (empty($this->failed)) {
             $results['all_after_pass'] = ResultEvent::createSucceed(static::MSG_RUN_ALL_SUCCESS);
         }
+
         return $results;
     }
 
@@ -146,28 +150,28 @@ class Inspector extends ContainerAware
     {
         /* @var ResultEvent $event */
         $file = static::getResultFileName();
-        if(!is_file($file)){
+        if (!is_file($file)) {
             throw new \RuntimeException('Unknown phpunit results.');
         }
         $data = Filesystem::unserialize($file);
         $results = array();
-        foreach($data as $key=>$event){
+        foreach ($data as $key=>$event) {
             $file = $event->getArgument('file');
-            if($event->isSucceed()){
-                foreach($this->failed as $failedKey=>$failedEvent){
-                    if($failedEvent->getArgument('file') === $file){
+            if ($event->isSucceed()) {
+                foreach ($this->failed as $failedKey=>$failedEvent) {
+                    if ($failedEvent->getArgument('file') === $file) {
                         unset($this->failed[$failedKey]);
                     }
                 }
-                if($showSuccess){
+                if ($showSuccess) {
                     $results[$key] = $event;
                 }
-            }
-            else {
+            } else {
                 $this->failed[$key] = $event;
                 $results[$key] = $event;
             }
         }
+
         return $results;
     }
 
