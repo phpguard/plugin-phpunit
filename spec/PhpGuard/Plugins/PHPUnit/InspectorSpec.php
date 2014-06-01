@@ -55,6 +55,7 @@ class InspectorSpec extends ObjectBehavior
             ->willReturn(array(
                 'cli'=>'--some-options',
                 'all_after_pass' => false,
+                'run_all_cli' => '--some-run-all'
             ))
         ;
         $plugin->getTitle()
@@ -100,6 +101,7 @@ class InspectorSpec extends ObjectBehavior
             ->willReturn(array(
                 'cli'   =>  '--some-options',
                 'all_after_pass' => true,
+                'run_all_cli' => '--some-run-all'
             ))
         ;
         $this->beConstructedWith();

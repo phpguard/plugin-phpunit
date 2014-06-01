@@ -81,9 +81,7 @@ class PHPUnitPlugin extends Plugin
             'all_after_pass' => false,
             'keep_failed' => false,
             'always_lint' => true,
-            'run_all' => array(
-                'cli' => null,
-            ),
+            'run_all_cli' => null,
         ));
     }
 

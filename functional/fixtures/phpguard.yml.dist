@@ -1,7 +1,8 @@
 phpunit:
     options:
-        cli: "--verbose"
+        cli:                "--verbose"
         keep_failed:        true
         all_after_pass:     true
+        run_all_cli:        "--verbose"
     watch:
         - {pattern: "#^tests/(.+)\.php$#"}

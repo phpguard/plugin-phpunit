@@ -30,7 +30,9 @@ class Inspector extends ContainerAware
     const MSG_RUN_ALL_SUCCESS       = 'Run All Succeed';
     const CONTAINER_RESULT_ID       = 'phpunit.inspector_result';
 
-    private $runArgs;
+    private $runAllCli;
+
+    private $cli;
 
     /**
      * @var PHPUnitPlugin
@@ -66,7 +68,8 @@ class Inspector extends ContainerAware
         parent::setContainer($container);
         $phpunit = $container->get('plugins.phpunit');
         $this->options = $options = $phpunit->getOptions();
-        $this->runArgs = $options['cli'];
+        $this->cli = $options['cli'];
+        $this->runAllCli = is_null($options['run_all_cli']) ? $this->cli:$options['run_all_cli'];
         $this->plugin = $phpunit;
     }
 
@@ -78,7 +81,7 @@ class Inspector extends ContainerAware
         // normalize path
         $paths = str_replace(getcwd().DIRECTORY_SEPARATOR,'',$paths);
 
-        $args = explode(' ',$this->runArgs);
+        $args = explode(' ',$this->cli);
 
         $builder = new ProcessBuilder($args);
         $builder->setPrefix($this->executable);
@@ -109,7 +112,7 @@ class Inspector extends ContainerAware
 
     private function doRunAll()
     {
-        $args = $this->runArgs;
+        $args = $this->runAllCli;
         $args = explode(' ',$args);
         if (count($this->failed) > 0) {
             $files = array();
