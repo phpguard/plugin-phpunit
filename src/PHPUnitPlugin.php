@@ -11,6 +11,8 @@
 
 namespace PhpGuard\Plugins\PHPUnit;
 
+use PhpGuard\Application\ApplicationEvents;
+use PhpGuard\Application\Event\GenericEvent;
 use PhpGuard\Application\Plugin\Plugin;
 use PhpGuard\Application\Watcher;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -24,7 +26,22 @@ class PHPUnitPlugin extends Plugin
     public function __construct()
     {
         $this->setOptions(array());
+    }
 
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ApplicationEvents::started => 'start'
+        );
+    }
+
+    public function start(GenericEvent $event)
+    {
+        if($this->options['all_on_start']){
+            $this->logger->addDebug('Begin executing all on start');
+            $event->addProcessEvent($this->runAll());
+            $this->logger->addDebug('End executing all on start');
+        }
     }
 
     public function configure()
