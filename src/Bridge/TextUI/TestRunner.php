@@ -14,6 +14,7 @@ namespace PhpGuard\Plugins\PHPUnit\Bridge\TextUI;
 use PhpGuard\Application\Bridge\CodeCoverageRunner;
 use PhpGuard\Application\Container;
 use PhpGuard\Application\Event\ResultEvent;
+use PhpGuard\Application\PhpGuard;
 use PhpGuard\Plugins\PHPUnit\Inspector;
 use PhpGuard\Plugins\PHPUnit\Bridge\TestListener;
 use PhpGuard\Application\Util\Filesystem;
@@ -35,12 +36,12 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
      */
     private $testListener;
 
-    private $testFiles = array();
-
     /**
      * @var CodeCoverageRunner
      */
     private $coverageRunner;
+
+    private $errorFile;
 
     public function __construct(PHPUnit_Runner_TestSuiteLoader $loader = null, PHP_CodeCoverage_Filter $filter = null)
     {
@@ -82,10 +83,16 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
 
     private function configureErrorHandler()
     {
-        @unlink($file=sys_get_temp_dir().'/phpspec_error.log');
-        ini_set('display_errors', 0);
+        $file = PhpGuard::getPluginCache('phpunit').'/error.log';
+        if(is_file($file)){
+            @unlink($file);
+        }
+        touch($file);
+        $this->errorFile = $file;
+        ini_set('display_errors', 1);
         ini_set('error_log',$file);
         register_shutdown_function(array($this,'handleShutdown'));
+
     }
 
     public function handleShutdown()
@@ -96,7 +103,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         if($lastError && in_array($lastError['type'],$fatalErrors)){
             $message = 'Fatal Error '.$lastError['message'];
             $error = $lastError;
-            $trace = file(sys_get_temp_dir().'/phpspec_error.log');
+            $trace = file($this->errorFile);
 
             $traces = array();
             for( $i=0,$count=count($trace);$i < $count; $i++ ){
