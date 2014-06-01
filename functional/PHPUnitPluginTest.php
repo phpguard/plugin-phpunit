@@ -94,6 +94,8 @@ class PHPUnitPluginTest extends TestCase
         $this->assertDisplayContains('Failures: 1');
 
         $this->getTester()->run('all phpunit -vvv');
+
+        $this->getTester()->run('all phpunit -vvv');
         $this->assertDisplayContains('Tests: 1');
         $this->assertDisplayContains('Assertions: 1');
         $this->assertDisplayContains('Failures: 1');
@@ -103,8 +105,8 @@ class PHPUnitPluginTest extends TestCase
         $this->evaluate();
         $this->assertDisplayContains('1 test, 1 assertion');
 
+        $this->getTester()->run('all phpunit -vvv');
         $this->assertDisplayContains('3 tests');
-
     }
 
     protected function createTestClass($className,$file,$content)

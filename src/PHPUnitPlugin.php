@@ -26,15 +26,18 @@ class PHPUnitPlugin extends Plugin
     public function __construct()
     {
         $this->setOptions(array());
+
     }
 
-    public function setContainer(ContainerInterface $container)
+    public function configure()
     {
-        parent::setContainer($container);
+        parent::configure();
+        $container = $this->container;
         $container->setShared('phpunit.inspector',function ($c) {
             return new Inspector();
         });
     }
+
 
     public function addWatcher(Watcher $watcher)
     {

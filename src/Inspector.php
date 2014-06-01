@@ -70,7 +70,7 @@ class Inspector extends ContainerAware
         $this->plugin = $phpunit;
     }
 
-    public function run(array $paths = array(),$allAfterPass=true)
+    public function run(array $paths = array())
     {
         $runner = $this->getRunner();
         $paths = implode(',',$paths);
@@ -100,6 +100,7 @@ class Inspector extends ContainerAware
         $results = $this->doRunAll();
         $event = new ProcessEvent($this->plugin,$results);
         if (count($this->failed) > 0) {
+            $this->getLogger()->addDebug('Run all tests failed');
             $this->container->setParameter('application.exit_code',ResultEvent::FAILED);
         }
 
@@ -110,14 +111,14 @@ class Inspector extends ContainerAware
     {
         $args = $this->runArgs;
         $args = explode(' ',$args);
-
         if (count($this->failed) > 0) {
             $files = array();
-            foreach ($this->failed as $resultEvent) {
-                $file=$resultEvent->getArgument('file');
+            foreach ($this->failed as $file) {
+                //$file=$resultEvent->getArgument('file');
                 $file = ltrim(str_replace(getcwd(),'',$file),'\\/');
                 $files[] = $file;
             }
+
             if (!empty($files)) {
                 $this->getLogger()->addDebug('keep failed tests run');
                 $files = array_unique($files);
@@ -131,7 +132,7 @@ class Inspector extends ContainerAware
         $runner->run($builder);
         $results = $this->checkResult(false);
 
-        if (empty($this->failed)) {
+        if (0===count($this->failed)) {
             $results['all_after_pass'] = ResultEvent::createSucceed(static::MSG_RUN_ALL_SUCCESS);
         }
 
@@ -155,7 +156,7 @@ class Inspector extends ContainerAware
         }
         $data = Filesystem::unserialize($file);
         $results = array();
-        foreach ($data as $key=>$event) {
+        foreach ($data as $event) {
             $file = $event->getArgument('file');
             $failedKey = md5(realpath($file));
             if ($event->isSucceed()) {
@@ -164,7 +165,7 @@ class Inspector extends ContainerAware
                     $results[] = $event;
                 }
             } else {
-                $this->failed[$failedKey] = $event;
+                $this->failed[$failedKey] = $file;
                 $results[] = $event;
             }
         }
