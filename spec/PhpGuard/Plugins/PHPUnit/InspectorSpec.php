@@ -5,22 +5,23 @@ namespace spec\PhpGuard\Plugins\PHPUnit;
 use PhpGuard\Application\Container\ContainerInterface;
 use PhpGuard\Application\Event\ResultEvent;
 use PhpGuard\Application\Log\Logger;
-use PhpGuard\Application\PhpGuard;
 use PhpGuard\Application\Plugin\PluginInterface;
 use PhpGuard\Application\Spec\ObjectBehavior;
 use PhpGuard\Application\Util\Filesystem;
 use PhpGuard\Application\Util\Runner;
+
 use PhpGuard\Plugins\PHPUnit\Inspector;
 use PhpGuard\Plugins\PHPUnit\PHPUnitPlugin;
+
 use Prophecy\Argument;
-use Symfony\Component\Finder\Shell\Command;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 
 class InspectorSpec extends ObjectBehavior
 {
     protected $cacheFile;
 
-    protected $cwd;
+    static protected $cwd;
 
     function let(
         ContainerInterface $container,
@@ -30,8 +31,12 @@ class InspectorSpec extends ObjectBehavior
         Logger $logger
     )
     {
-        $this->cwd = getcwd();
-        chdir(sys_get_temp_dir());
+        if(is_null(static::$cwd)){
+            static::$cwd = getcwd();
+        }
+
+        //chdir(sys_get_temp_dir());
+
         $this->cacheFile = Inspector::getResultFileName();
         @unlink($this->cacheFile);
         $runner->setContainer($container);
@@ -60,7 +65,7 @@ class InspectorSpec extends ObjectBehavior
 
     function letgo()
     {
-        chdir($this->cwd);
+        //chdir(static::$cwd);
     }
 
     function it_is_initializable()
@@ -73,7 +78,7 @@ class InspectorSpec extends ObjectBehavior
         Process $process
     )
     {
-        $event = $this->createCommandEvent(ResultEvent::SUCCEED,' Success Message');
+        $event = ResultEvent::createSucceed('Success');
         Filesystem::serialize($this->cacheFile,array(
             'key' => $event,
         ));
@@ -100,7 +105,7 @@ class InspectorSpec extends ObjectBehavior
         $this->beConstructedWith();
         $this->setContainer($container);
 
-        $event = $this->createCommandEvent(ResultEvent::SUCCEED,' Success Message');
+        $event = ResultEvent::createSucceed('Success');
         Filesystem::serialize($this->cacheFile,array(
             'key' => $event,
         ));
@@ -123,29 +128,69 @@ class InspectorSpec extends ObjectBehavior
     )
     {
         Filesystem::serialize($this->cacheFile,array(
-            'succeed' => $this->createCommandEvent(ResultEvent::SUCCEED,' Success Message'),
-            'failed' => $this->createCommandEvent(ResultEvent::FAILED,' Failed Message'),
-            'broken' => $this->createCommandEvent(ResultEvent::BROKEN,' Failed Message'),
+            'succeed' => ResultEvent::createSucceed('Success'),
+            'failed' => ResultEvent::createFailed('Failed'),
+            'broken' => ResultEvent::createBroken('Broken'),
         ));
         $runner->run(Argument::any())
-            ->willReturn($process)
             ->shouldBeCalled();
+
         $results = $this->runAll();
         $results->getResults()->shouldHaveKey('failed');
         $results->getResults()->shouldHaveKey('broken');
         $results->getResults()->shouldNotHaveKey('succeed');
     }
 
-    /**
-     * @param PluginInterface   $plugin
-     * @param int               $result
-     * @param string            $message
-     *
-     * @return ResultEvent
-     */
-    public function createCommandEvent($result,$message)
+    function it_should_keep_failed_test_to_run(
+        Runner $runner,
+        ContainerInterface $container
+    )
     {
-        $event = new ResultEvent($result,$message);
-        return $event;
+        $failed = ResultEvent::createFailed('Failed',array(
+            'file' => 'some_file'
+        ));
+        $success = ResultEvent::createSucceed('Success');
+
+        Filesystem::serialize($this->cacheFile,array(
+            'failed' => $failed,
+            'success' => $success
+        ));
+
+        $this->runAll()->getResults()->shouldHaveKey('failed');
+        $this->runAll()->getResults()->shouldNotHaveKey('success');
+
+        $runner->run(Argument::that(function(ProcessBuilder $builder){
+            $line = $builder->getProcess()->getCommandLine();
+            return false!== strpos($line,'some_file');
+        }))
+            ->shouldBeCalled()
+        ;
+        $this->runAll();
+    }
+
+    function its_runAll_should_set_application_exit_code_if_results_has_failed_or_broken(
+        ContainerInterface $container
+    )
+    {
+        $failed = ResultEvent::createFailed('Failed',array(
+            'file' => 'some_file'
+        ));
+        $success = ResultEvent::createSucceed('Success');
+
+        Filesystem::serialize($this->cacheFile,array(
+            'failed' => $failed,
+            'success' => $success
+        ));
+        $container->setParameter('application.exit_code',ResultEvent::FAILED)
+            ->shouldBeCalled()
+        ;
+
+        $this->runAll();
+    }
+
+    function it_throws_when_result_file_not_exists()
+    {
+        $this->shouldThrow('RuntimeException')
+            ->duringRunAll();
     }
 }

@@ -18,7 +18,7 @@ phpunit:
         all_after_pass: true
         keep_failed:    true
     watch:
-        - { pattern: "#^src\/(.+)\.php$#", transform: "functional/PHPUnitPluginTest.php" }
+        - { pattern: "#^src\/(.+)\.php$#", transform: "functional/${1}Test.php" }
         - { pattern: "#^functional\/.*Test.php$#" }
 
 phpspec:

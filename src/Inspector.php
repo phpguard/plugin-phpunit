@@ -57,7 +57,7 @@ class Inspector extends ContainerAware
     static public function getResultFileName()
     {
         $dir = PhpGuard::getPluginCache('phpunit');
-        return $dir.DIRECTORY_SEPARATOR.'/results.dat';
+        return $dir.'/results.dat';
     }
 
     public function setContainer(ContainerInterface $container)
@@ -79,7 +79,6 @@ class Inspector extends ContainerAware
 
         $args = explode(' ',$this->runArgs);
 
-
         $builder = new ProcessBuilder($args);
         $builder->setPrefix($this->executable);
         $builder->add($paths);
@@ -91,9 +90,6 @@ class Inspector extends ContainerAware
             $results = array_merge($results,$this->doRunAll());
         }
         $event = new ProcessEvent($this->plugin,$results);
-        if(count($this->failed) > 1){
-            $this->container->setParameter('application.exit_code',ResultEvent::FAILED);
-        }
         return $event;
     }
 
@@ -101,7 +97,7 @@ class Inspector extends ContainerAware
     {
         $results = $this->doRunAll();
         $event = new ProcessEvent($this->plugin,$results);
-        if(count($this->failed) > 1){
+        if(count($this->failed) > 0){
             $this->container->setParameter('application.exit_code',ResultEvent::FAILED);
         }
         return $event;

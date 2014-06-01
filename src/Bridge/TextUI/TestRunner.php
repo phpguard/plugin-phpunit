@@ -59,7 +59,6 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
 
     public function doRun(PHPUnit_Framework_Test $suite, array $arguments = array())
     {
-
         $arguments['listeners'][] = $this->testListener;
         $result = parent::doRun($suite,$arguments);
         $results = $this->testListener->getResults();
@@ -95,6 +94,9 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
 
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function handleShutdown()
     {
         $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
@@ -120,6 +122,9 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
                 $traces
             );
             Filesystem::serialize(Inspector::getResultFileName(),array($event));
+            if($this->coverageRunner){
+                $this->coverageRunner->saveState();
+            }
         }
     }
 

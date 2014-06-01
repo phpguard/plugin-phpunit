@@ -85,7 +85,7 @@ class PHPUnitPluginTest extends TestCase
 
         $this->createTestClass('FooTest','tests/FooTest.php','$this->assertTrue(true);');
         $this->createTestClass('SucceedTest','tests/SucceedTest.php','$this->assertTrue(true);');
-        $this->createTestClass('FailedTest','tests/FailedTest.php','$this->assertFalse(true);');
+        $this->createTestClass('FailedTest','tests/FailedTest.php','$this->assertTrue(false);');
 
         $this->getTester()->run('-vvv');
 
@@ -105,8 +105,6 @@ class PHPUnitPluginTest extends TestCase
         $this->assertDisplayContains('1 test, 1 assertion');
 
         $this->assertDisplayContains('3 tests');
-
-        //$this->getTester()->run('all phpunit -vvv');
 
     }
 

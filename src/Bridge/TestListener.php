@@ -98,8 +98,7 @@ class TestListener implements \PHPUnit_Framework_TestListener
 
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        //printf("TestSuite '%s' started.\n", $suite->getName());
-
+        $this->hasFailed = false;
         return;
     }
 
@@ -113,7 +112,8 @@ class TestListener implements \PHPUnit_Framework_TestListener
         if(!class_exists($name)){
             return;
         }
-        if(!$this->hasFailed){
+
+        if(!$this->isFailed()){
             $r = new \ReflectionClass($name);
             $event = new ResultEvent(
                 ResultEvent::SUCCEED,
@@ -122,10 +122,10 @@ class TestListener implements \PHPUnit_Framework_TestListener
                     'file' => $r->getFileName(),
                 )
             );
+
+
             $this->results[md5($name)] = $event;
         }
-
-        $this->hasFailed = false;
     }
 
     /**
@@ -160,12 +160,15 @@ class TestListener implements \PHPUnit_Framework_TestListener
         $this->results[$key] = $event;
     }
 
+    /**
+     * @return ResultEvent[]
+     */
     public function getResults()
     {
         return $this->results;
     }
 
-    public function hasFailed()
+    public function isFailed()
     {
         return $this->hasFailed;
     }

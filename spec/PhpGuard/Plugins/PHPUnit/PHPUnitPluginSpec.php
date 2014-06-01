@@ -30,6 +30,8 @@ class PHPUnitPluginSpec extends ObjectBehavior
 
         $container->get('phpunit.inspector')
             ->willReturn($inspector);
+        $container->setShared('phpunit.inspector',Argument::any())
+            ->willReturn();
 
         $logger = new Logger('PhpUnit');
         $this->setLogger($logger);
