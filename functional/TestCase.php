@@ -40,7 +40,7 @@ class TestCase extends FunctionalTestCase
     protected static function buildFixtures()
     {
         $finder  = Finder::create();
-        Filesystem::copyDir(__DIR__.'/fixtures',static::$tmpDir,$finder);
+        Filesystem::create()->copyDir(__DIR__.'/fixtures',static::$tmpDir,$finder);
         chdir(static::$tmpDir);
         $exFinder = new ExecutableFinder();
         if (!is_executable($executable=$exFinder->find('composer.phar'))) {

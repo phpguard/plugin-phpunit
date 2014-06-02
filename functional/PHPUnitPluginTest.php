@@ -57,8 +57,8 @@ class PHPUnitPluginTest extends TestCase
      */
     public function testShouldRunAll($expected)
     {
-        Filesystem::cleanDir(static::$tmpDir);
-        Filesystem::mkdir(static::$tmpDir);
+        Filesystem::create()->cleanDir(static::$tmpDir);
+        Filesystem::create()->mkdir(static::$tmpDir);
         static::buildFixtures();
         static::createApplication();
 
@@ -77,8 +77,8 @@ class PHPUnitPluginTest extends TestCase
 
     public function testShouldRunAllAfterPass()
     {
-        Filesystem::cleanDir(static::$tmpDir);
-        Filesystem::mkdir(static::$tmpDir);
+        Filesystem::create()->cleanDir(static::$tmpDir);
+        Filesystem::create()->mkdir(static::$tmpDir);
         static::buildFixtures();
         static::createApplication();
 

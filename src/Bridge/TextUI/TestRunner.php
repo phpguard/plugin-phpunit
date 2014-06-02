@@ -61,7 +61,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         $arguments['listeners'][] = $this->testListener;
         $result = parent::doRun($suite,$arguments);
         $results = $this->testListener->getResults();
-        Filesystem::serialize(Inspector::getResultFileName(),$results);
+        Filesystem::create()->serialize(Inspector::getResultFileName(),$results);
         $this->coverageRunner->saveState();
 
         return $result;
@@ -122,7 +122,7 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
                 null,
                 $traces
             );
-            Filesystem::serialize(Inspector::getResultFileName(),array($event));
+            Filesystem::create()->serialize(Inspector::getResultFileName(),array($event));
             if ($this->coverageRunner) {
                 $this->coverageRunner->saveState();
             }

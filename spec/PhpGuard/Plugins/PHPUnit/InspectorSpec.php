@@ -80,7 +80,7 @@ class InspectorSpec extends ObjectBehavior
     )
     {
         $event = ResultEvent::createSucceed('Success');
-        Filesystem::serialize($this->cacheFile,array(
+        Filesystem::create()->serialize($this->cacheFile,array(
             'key' => $event,
         ));
         $runner->run(Argument::any())
@@ -108,7 +108,7 @@ class InspectorSpec extends ObjectBehavior
         $this->setContainer($container);
 
         $event = ResultEvent::createSucceed('Success');
-        Filesystem::serialize($this->cacheFile,array(
+        Filesystem::create()->serialize($this->cacheFile,array(
             'key' => $event,
         ));
         $process->getExitCode()->willReturn(0);
@@ -128,7 +128,7 @@ class InspectorSpec extends ObjectBehavior
         Runner $runner
     )
     {
-        Filesystem::serialize($this->cacheFile,array(
+        Filesystem::create()->serialize($this->cacheFile,array(
             'succeed' => ResultEvent::createSucceed('Success'),
             'failed' => ResultEvent::createFailed('Failed'),
             'broken' => ResultEvent::createBroken('Broken'),
@@ -149,7 +149,7 @@ class InspectorSpec extends ObjectBehavior
         ));
         $success = ResultEvent::createSucceed('Success');
 
-        Filesystem::serialize($this->cacheFile,array(
+        Filesystem::create()->serialize($this->cacheFile,array(
             'failed' => $failed,
             'success' => $success
         ));
@@ -174,7 +174,7 @@ class InspectorSpec extends ObjectBehavior
         ));
         $success = ResultEvent::createSucceed('Success');
 
-        Filesystem::serialize($this->cacheFile,array(
+        Filesystem::create()->serialize($this->cacheFile,array(
             'failed' => $failed,
             'success' => $success
         ));

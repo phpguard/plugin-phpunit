@@ -157,7 +157,7 @@ class Inspector extends ContainerAware
         if (!is_file($file)) {
             throw new \RuntimeException('Unknown phpunit results.');
         }
-        $data = Filesystem::unserialize($file);
+        $data = Filesystem::create()->unserialize($file);
         $results = array();
         foreach ($data as $event) {
             $file = $event->getArgument('file');
