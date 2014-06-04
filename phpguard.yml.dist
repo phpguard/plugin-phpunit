@@ -27,8 +27,7 @@ phpspec:
         all_on_start:       true
         all_after_pass:     true
         keep_failed:        true
-        run_all:
-            cli:            "--format=pretty"
+        run_all_cli:        "--format=pretty"
     watch:
         - { pattern: "#^src\/(.+)\.php$#", transform: "spec/PhpGuard/Plugins/PHPUnit/${1}Spec.php" }
         - { pattern: "#^spec\/(.+)\.php$#" }

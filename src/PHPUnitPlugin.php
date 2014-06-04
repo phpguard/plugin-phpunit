@@ -37,7 +37,7 @@ class PHPUnitPlugin extends Plugin
 
     public function start(GenericEvent $event)
     {
-        if($this->options['all_on_start']){
+        if ($this->options['all_on_start']) {
             $this->logger->addDebug('Begin executing all on start');
             $event->addProcessEvent($this->runAll());
             $this->logger->addDebug('End executing all on start');

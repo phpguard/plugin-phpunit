@@ -45,9 +45,8 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
     public function __construct(PHPUnit_Runner_TestSuiteLoader $loader = null, PHP_CodeCoverage_Filter $filter = null)
     {
         $this->coverageRunner = $coverageRunner = CodeCoverageSession::getCached();
-        $filter = $coverageRunner->getFilter();
-
         parent::__construct($loader, $filter);
+
         if (is_file($file=Inspector::getResultFileName())) {
             unlink($file);
         }
@@ -62,7 +61,9 @@ class TestRunner extends PHPUnit_TextUI_TestRunner
         $result = parent::doRun($suite,$arguments);
         $results = $this->testListener->getResults();
         Filesystem::create()->serialize(Inspector::getResultFileName(),$results);
-        $this->coverageRunner->saveState();
+        if ($this->coverageRunner) {
+            $this->coverageRunner->saveState();
+        }
 
         return $result;
     }

@@ -36,7 +36,7 @@ class TestListener implements \PHPUnit_Framework_TestListener
      */
     private $coverage;
 
-    public function setCoverage(CodeCoverageSession $coverage)
+    public function setCoverage(CodeCoverageSession $coverage=null)
     {
         $this->coverage = $coverage;
     }
@@ -77,14 +77,19 @@ class TestListener implements \PHPUnit_Framework_TestListener
             '%test%' => get_class($test),
             '%name%' =>$test->getName(),
         ));
-        $this->coverage->start($name);
+
+        if ($this->coverage) {
+            $this->coverage->start($name);
+        }
 
         return;
     }
 
     public function endTest(PHPUnit_Framework_Test $test, $time)
     {
-        $this->coverage->stop();
+        if ($this->coverage) {
+            $this->coverage->stop();
+        }
 
         return;
     }
